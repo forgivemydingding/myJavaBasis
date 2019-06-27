@@ -1,3 +1,4 @@
+import java.util.Date;
 import java.util.concurrent.Callable;
 import java.util.concurrent.FutureTask;
 
@@ -12,6 +13,27 @@ public class ThreadBasic {
         new MyThread().start();
         new Thread(new MyRunnable()).start();
         new Thread(new FutureTask<>(new MyCallable())).start();
+    }
+}
+
+class ThreadSleep {
+    public static void main(String[] args) throws Exception {
+        Thread thread0 = new Thread(() -> {
+            try {
+                System.out.println(new Date() + "\t" + Thread.currentThread().getName() + "\t线程睡眠程序已启动");
+                Thread.sleep(10000);
+            } catch (InterruptedException e) {
+                System.out.println(new Date() + "\t" + Thread.currentThread().getName() + "\t线程已被唤醒");
+            }
+        });
+        thread0.start();
+
+        //Thread.sleep(2000);
+        new Thread(() -> {
+            System.out.println(new Date() + "\t" + Thread.currentThread().getName() + "\t线程唤醒程序已启动");
+            // 无需获取锁就可以调用interrupt
+            thread0.interrupt();
+        }).start();
     }
 }
 
